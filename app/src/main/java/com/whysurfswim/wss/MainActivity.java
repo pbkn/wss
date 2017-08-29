@@ -120,7 +120,22 @@ public class MainActivity extends AppCompatActivity {
         fabTwitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                webview.loadUrl("https://www.twitter.com/@whysurfswim/");
+               Intent shareIntent = new Intent(Intent.ACTION_VIEW,
+                       Uri.parse("https://twitter.com/intent/follow?user_id=839208853103312896"));
+                shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                List<ResolveInfo> matches = getPackageManager().queryIntentActivities(shareIntent, 0);
+                for (ResolveInfo info : matches) {
+                    if (info.activityInfo.packageName.toLowerCase().contains("com.twitter.android")) {
+                        shareIntent.setPackage(info.activityInfo.packageName);
+                        flag = true;
+                    }
+                }
+                if (flag) {
+                    startActivity(shareIntent);
+                    webview.reload();
+                } else {
+                    webview.loadUrl("https://play.google.com/store/apps/details?id=com.twitter.android&hl=en");
+                }
             }
         });
 
@@ -145,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
             webview.reload();
         }
     }
+
 
     //closes FAB submenus
     private void closeSubMenusFab(){
@@ -293,13 +309,9 @@ public class MainActivity extends AppCompatActivity {
 
             if (url.startsWith("https://twitter")) {
                 Intent shareIntent;
-                if(url.equals("https://twitter.com/@whysurfswim/")){
-                    shareIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/whysurfswim"));
-                } else {
                     shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.putExtra(Intent.EXTRA_TEXT, webview.getUrl());
                     shareIntent.setType("text/plain");
-                }
                 List<ResolveInfo> matches = getPackageManager().queryIntentActivities(shareIntent, 0);
                 for (ResolveInfo info : matches) {
                     if (info.activityInfo.packageName.toLowerCase().contains("com.twitter")) {
