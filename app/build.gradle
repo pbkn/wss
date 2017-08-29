@@ -1,14 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
+    android.defaultConfig.vectorDrawables.useSupportLibrary = true;
     compileSdkVersion 26
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.whysurfswim.wss"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 3
-        versionName '3.0'
+        versionCode 4
+        versionName '4.0'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -28,5 +29,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.google.android.gms:play-services-ads:11.2.0'
+    compile 'com.android.support:design:26.+'
     testCompile 'junit:junit:4.12'
 }
