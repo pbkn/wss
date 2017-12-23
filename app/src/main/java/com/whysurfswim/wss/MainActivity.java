@@ -1,19 +1,21 @@
 package com.whysurfswim.wss;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.graphics.Bitmap;
-import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -23,62 +25,66 @@ import com.google.android.gms.ads.MobileAds;
 
 import java.util.List;
 
+@SuppressLint("setJavaScriptEnabled")
 public class MainActivity extends AppCompatActivity {
 
-    String ShowOrHideWebViewInitialUse = "show";
-    private WebView webview;
+    private WebView webView;
     private ProgressBar spinner;
-    private Toolbar toolbar;
-    private boolean flag,doubleBack,fabExpanded;
-    private AdView mAdView;
-    private FloatingActionButton fabInfo,fabAbout,fabShare,fabFacebook,fabLinkedin,fabWhatsapp,fabTwitter;
-    private LinearLayoutCompat layoutAbout,layoutShare,layoutLinkedin,layoutWhatsapp,layoutTwitter,layoutFacebook;
+    private FloatingActionButton fabInfo;
+    private LinearLayoutCompat layoutAbout, layoutShare, layoutLinkedin, layoutTwitter, layoutWhatsapp, layoutFacebook;
+    private boolean fabExpanded = true;
+    private long doubleBack = 0;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = this.findViewById(R.id.toolbar);
+        AdView adView = this.findViewById(R.id.adView);
+        FloatingActionButton fabAbout = this.findViewById(R.id.fabAbout);
+        FloatingActionButton fabShare = this.findViewById(R.id.fabShare);
+        FloatingActionButton fabLinkedin = this.findViewById(R.id.fabLinkedin);
+        FloatingActionButton fabTwitter = this.findViewById(R.id.fabTwitter);
+        FloatingActionButton fabWhatsapp = this.findViewById(R.id.fabWhatsapp);
+        FloatingActionButton fabFacebook = this.findViewById(R.id.fabFacebook);
+        spinner = this.findViewById(R.id.progressBar);
+        webView = this.findViewById(R.id.webView);
+        fabInfo = this.findViewById(R.id.fabInfo);
+        layoutAbout = this.findViewById(R.id.layoutFabAbout);
+        layoutShare = this.findViewById(R.id.layoutFabShare);
+        layoutLinkedin = this.findViewById(R.id.layoutFabLinkedin);
+        layoutTwitter = this.findViewById(R.id.layoutFabTwitter);
+        layoutWhatsapp = this.findViewById(R.id.layoutFabWhatsapp);
+        layoutFacebook = this.findViewById(R.id.layoutFabFacebook);
+
         setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        fabInfo.setVisibility(View.INVISIBLE);
+        closeSubMenusFab();
+        webView.setWebViewClient(new CustomWebViewClient());
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setAppCacheEnabled(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
 
-        webview = (WebView) findViewById(R.id.webView);
-        spinner = (ProgressBar) findViewById(R.id.progressBar1);
-        webview.setWebViewClient(new CustomWebViewClient());
-
-        if(isOnline()) {
-            webview.getSettings().setJavaScriptEnabled(true);
-            webview.getSettings().setDomStorageEnabled(true);
-            webview.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
-            webview.loadUrl("https://whysurfswim.com/");
-        }else {
+        if (isOnline()) {
+            webView.loadUrl("https://whysurfswim.com/");
+            MobileAds.initialize(this, "ca-app-pub-6059528612565667/8468844477");
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
+        } else {
             finish();
         }
 
-        MobileAds.initialize(this, "ca-app-pub-6059528612565667/8468844477");
-        mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
-
-        closeSubMenusFab();
-        fabInfo = (FloatingActionButton) this.findViewById(R.id.fabInfo);
-        fabAbout = (FloatingActionButton) this.findViewById(R.id.fabAbout);
-        fabShare = (FloatingActionButton) this.findViewById(R.id.fabShare);
-        fabLinkedin = (FloatingActionButton) this.findViewById(R.id.fabLinkedin);
-        fabTwitter = (FloatingActionButton) this.findViewById(R.id.fabTwitter);
-        fabWhatsapp = (FloatingActionButton) this.findViewById(R.id.fabWhatsapp);
-        fabFacebook = (FloatingActionButton) this.findViewById(R.id.fabFacebook);
-
-        //When main Fab (Settings) is clicked, it expands if not expanded already.
-        //Collapses if main FAB was open already.
-        //This gives FAB (Settings) open/close behavior
         fabInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (fabExpanded){
+                if (fabExpanded) {
                     closeSubMenusFab();
                 } else {
                     openSubMenusFab();
@@ -89,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         fabAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                webview.loadUrl("https://play.google.com/store/apps/details?id=com.whysurfswim.wss&hl=en");
+                webView.loadUrl("https://play.google.com/store/apps/details?id=com.whysurfswim.wss&hl=en");
             }
         });
 
@@ -97,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, webview.getUrl());
+                shareIntent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
                 shareIntent.setType("text/plain");
                 startActivity(shareIntent);
             }
@@ -106,35 +112,27 @@ public class MainActivity extends AppCompatActivity {
         fabWhatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                webview.loadUrl("https://chat.whatsapp.com/invite/1ACYKZvKAcP7GJqhgG0NBk");
+                webView.loadUrl("https://chat.whatsapp.com/invite/1ACYKZvKAcP7GJqhgG0NBk");
             }
         });
 
-        fabLinkedin.setOnClickListener(new View.OnClickListener(){
+        fabLinkedin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                webview.loadUrl("https://www.linkedin.com/company-beta/13269149/");
+            public void onClick(View view) {
+                webView.loadUrl("https://www.linkedin.com/company-beta/13269149/");
             }
         });
 
         fabTwitter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               Intent shareIntent = new Intent(Intent.ACTION_VIEW,
-                       Uri.parse("https://twitter.com/intent/follow?user_id=839208853103312896"));
+                Intent shareIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/intent/follow?user_id=839208853103312896"));
                 shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                List<ResolveInfo> matches = getPackageManager().queryIntentActivities(shareIntent, 0);
-                for (ResolveInfo info : matches) {
-                    if (info.activityInfo.packageName.toLowerCase().contains("com.twitter.android")) {
-                        shareIntent.setPackage(info.activityInfo.packageName);
-                        flag = true;
-                    }
-                }
-                if (flag) {
+                if (checkPackage(shareIntent, "com.twitter.android")) {
                     startActivity(shareIntent);
-                    webview.reload();
+                    webView.reload();
                 } else {
-                    webview.loadUrl("https://play.google.com/store/apps/details?id=com.twitter.android&hl=en");
+                    webView.loadUrl("https://play.google.com/store/apps/details?id=com.twitter.android&hl=en");
                 }
             }
         });
@@ -142,36 +140,29 @@ public class MainActivity extends AppCompatActivity {
         fabFacebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                webview.loadUrl("https://www.facebook.com/whysurfswim/");
+                webView.loadUrl("https://www.facebook.com/whysurfswim/");
             }
         });
     }
 
     @Override
     public void onBackPressed() {
-        if (webview.canGoBack()) {
-            doubleBack=false;
-            webview.goBack();
-        } else if(doubleBack){
+        if (webView.canGoBack()) {
+            doubleBack = 0;
+            webView.goBack();
+        } else if (doubleBack + 2000 > System.currentTimeMillis()) {
             super.onBackPressed();
         } else {
-            doubleBack=true;
+            doubleBack = System.currentTimeMillis();
             Toast.makeText(this, "Click BACK button again to exit", Toast.LENGTH_SHORT).show();
-            webview.reload();
         }
     }
 
 
-    //closes FAB submenus
-    private void closeSubMenusFab(){
-        fabInfo = (FloatingActionButton) this.findViewById(R.id.fabInfo);
-        layoutAbout = (LinearLayoutCompat) this.findViewById(R.id.layoutFabAbout);
-        layoutShare = (LinearLayoutCompat) this.findViewById(R.id.layoutFabShare);
-        layoutLinkedin = (LinearLayoutCompat) this.findViewById(R.id.layoutFabLinkedin);
-        layoutTwitter = (LinearLayoutCompat) this.findViewById(R.id.layoutFabTwitter);
-        layoutWhatsapp = (LinearLayoutCompat) this.findViewById(R.id.layoutFabWhatsapp);
-        layoutFacebook = (LinearLayoutCompat) this.findViewById(R.id.layoutFabFacebook);
-
+    /**
+     * closeSubMenusFab method used to close all the opened fabs
+     */
+    private void closeSubMenusFab() {
         layoutLinkedin.setVisibility(View.INVISIBLE);
         layoutWhatsapp.setVisibility(View.INVISIBLE);
         layoutTwitter.setVisibility(View.INVISIBLE);
@@ -182,224 +173,187 @@ public class MainActivity extends AppCompatActivity {
         fabExpanded = false;
     }
 
-    //Opens FAB submenus
-    private void openSubMenusFab(){
-        fabInfo = (FloatingActionButton) this.findViewById(R.id.fabInfo);
-        layoutAbout = (LinearLayoutCompat) this.findViewById(R.id.layoutFabAbout);
-        layoutShare = (LinearLayoutCompat) this.findViewById(R.id.layoutFabShare);
-        layoutLinkedin = (LinearLayoutCompat) this.findViewById(R.id.layoutFabLinkedin);
-        layoutTwitter = (LinearLayoutCompat) this.findViewById(R.id.layoutFabTwitter);
-        layoutWhatsapp = (LinearLayoutCompat) this.findViewById(R.id.layoutFabWhatsapp);
-        layoutFacebook = (LinearLayoutCompat) this.findViewById(R.id.layoutFabFacebook);
-
+    /**
+     * openSubMenusFab method used to open all the closed fabs
+     */
+    private void openSubMenusFab() {
         layoutLinkedin.setVisibility(View.VISIBLE);
         layoutWhatsapp.setVisibility(View.VISIBLE);
         layoutTwitter.setVisibility(View.VISIBLE);
         layoutAbout.setVisibility(View.VISIBLE);
         layoutShare.setVisibility(View.VISIBLE);
         layoutFacebook.setVisibility(View.VISIBLE);
-        //Change settings icon to 'X' icon
         fabInfo.setImageResource(R.drawable.ic_close_black_24dp);
         fabExpanded = true;
     }
 
-    public boolean isOnline() {
-        ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(this.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
-
-        if(netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()){
-            Toast.makeText(this, "No Internet connection!", Toast.LENGTH_LONG).show();
-            return false;
+    /**
+     * isOnline method is used to check the status of internet connection
+     *
+     * @return boolean
+     */
+    private boolean isOnline() {
+        ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(CONNECTIVITY_SERVICE);
+        if (conMgr != null) {
+            NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+            if (netInfo == null || !netInfo.isConnected() || !netInfo.isAvailable()) {
+                Toast.makeText(this, "No Internet connection !", Toast.LENGTH_LONG).show();
+                return false;
+            }
         }
         return true;
     }
 
-    // This allows for a splash screen
-    // (and hide elements once the page loads)
+    /**
+     * checkPackage method is used to check for installed apps in phone
+     *
+     * @param intent     {intent variant to load package}
+     * @param appPackage {app folder path}
+     * @return boolean
+     */
+    private boolean checkPackage(Intent intent, String appPackage) {
+        List<ResolveInfo> matches = getPackageManager().queryIntentActivities(intent, 0);
+        for (ResolveInfo info : matches) {
+            if (info.activityInfo.packageName.toLowerCase().contains(appPackage)) {
+                intent.setPackage(info.activityInfo.packageName);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * CustomeWebViewClient used to load our main screen using webview
+     */
     private class CustomWebViewClient extends WebViewClient {
+
         @Override
-        public void onPageStarted(WebView webview, String url, Bitmap favicon) {
+        @SuppressLint("setJavaScriptEnabled")
+        public void onPageStarted(WebView webView, String url, Bitmap favicon) {
+            if (!isOnline()) {
+                finish();
+            } else {
+                spinner.setVisibility(View.VISIBLE);
+            }
 
-            if(url.startsWith("https://play.google.com")){
+            if (spinner.getVisibility() == View.VISIBLE) {
+                webView.setVisibility(View.INVISIBLE);
+            }
+
+            if (url.startsWith("https://play.google.com")) {
                 Intent shareIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                List<ResolveInfo> matches = getPackageManager().queryIntentActivities(shareIntent, 0);
-                for (ResolveInfo info : matches) {
-                    if (info.activityInfo.packageName.toLowerCase().contains("com.android.vending")) {
-                        shareIntent.setPackage(info.activityInfo.packageName);
-                        flag = true;
-                    }
-                }
-                if (flag) {
+                if (checkPackage(shareIntent, "com.android.vending")) {
                     startActivity(shareIntent);
-                    webview.reload();
+                    webView.reload();
                 } else {
-                    webview.loadUrl(url);
+                    webView.loadUrl(url);
                 }
             }
 
-            if(url.startsWith("market://details")){
-                webview.loadUrl("https://www.flipkart.com/?cmpid=fkrt_affiliate_network_ravichand32&referrer=mat_click_id%3Ddbad0e023ca71d5f3aa21bd92cea8081-20170710-189358");
+            if (url.startsWith("market://details")) {
+                webView.loadUrl("https://www.flipkart.com/?cmpid=fkrt_affiliate_network_ravichand32&referrer=mat_click_id%3Ddbad0e023ca71d5f3aa21bd92cea8081-20170710-189358");
             }
 
-            if(url.equals("https://www.g2g.com/r/pbkn")){
-                webview.loadUrl("https://www.g2g.com/clash-royale/top-up-gems-23420-23443");
+            if (url.equals("https://www.g2g.com/r/pbkn")) {
+                webView.loadUrl("https://www.g2g.com/clash-royale/top-up-gems-23420-23443");
             }
 
-            if(url.equals("https://chat.whatsapp.com/invite/1ACYKZvKAcP7GJqhgG0NBk")){
+            if (url.equals("https://chat.whatsapp.com/invite/1ACYKZvKAcP7GJqhgG0NBk")) {
                 Intent shareIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                List<ResolveInfo> matches = getPackageManager().queryIntentActivities(shareIntent, 0);
-                for (ResolveInfo info : matches) {
-                    if (info.activityInfo.packageName.toLowerCase().contains("com.whatsapp")) {
-                        shareIntent.setPackage(info.activityInfo.packageName);
-                        flag = true;
-                    }
-                }
-                if (flag) {
+                if (checkPackage(shareIntent, "com.whatsapp")) {
                     startActivity(shareIntent);
-                    webview.reload();
+                    webView.reload();
                 } else {
-                    webview.loadUrl("https://play.google.com/store/apps/details?id=com.whatsapp&hl=en");
+                    webView.loadUrl("https://play.google.com/store/apps/details?id=com.whatsapp&hl=en");
                 }
             }
 
             if (url.startsWith("https://www.facebook")) {
                 Intent shareIntent;
-                if(url.equals("https://www.facebook.com/whysurfswim/")){
+                if (url.equals("https://www.facebook.com/whysurfswim/")) {
                     shareIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/410812639284252"));
                 } else {
                     shareIntent = new Intent(Intent.ACTION_SEND);
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, webview.getUrl());
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
                     shareIntent.setType("text/plain");
                 }
-                List<ResolveInfo> matches = getPackageManager().queryIntentActivities(shareIntent, 0);
-                for (ResolveInfo info : matches) {
-                    if (info.activityInfo.packageName.toLowerCase().contains("com.facebook.kata") || info.activityInfo.packageName.toLowerCase().contains("com.facebook.li")) {
-                        shareIntent.setPackage(info.activityInfo.packageName);
-                        flag = true;
-                    }
-                }
-                if (flag) {
+                if (checkPackage(shareIntent, "com.facebook.kata") || checkPackage(shareIntent, "com.facebook.li")) {
                     startActivity(shareIntent);
-                    webview.reload();
+                    webView.reload();
                 } else {
-                    webview.loadUrl("https://play.google.com/store/apps/details?id=com.facebook.katana&hl=en");
+                    webView.loadUrl("https://play.google.com/store/apps/details?id=com.facebook.katana&hl=en");
                 }
             }
 
             if (url.startsWith("whatsapp://")) {
-
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, webview.getUrl());
+                shareIntent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
                 shareIntent.setType("text/plain");
-
-                List<ResolveInfo> matches = getPackageManager().queryIntentActivities(shareIntent, 0);
-                for (ResolveInfo info : matches) {
-                    if (info.activityInfo.packageName.toLowerCase().contains("com.whatsapp")) {
-                        shareIntent.setPackage(info.activityInfo.packageName);
-                        flag = true;
-                    }
-                }
-                if (flag) {
+                if (checkPackage(shareIntent, "com.whatsapp")) {
                     startActivity(shareIntent);
-                    webview.reload();
+                    webView.reload();
                 } else {
-                    webview.loadUrl("https://play.google.com/store/apps/details?id=com.whatsapp&hl=en");
+                    webView.loadUrl("https://play.google.com/store/apps/details?id=com.whatsapp&hl=en");
                 }
             }
 
             if (url.startsWith("https://twitter")) {
-                Intent shareIntent;
-                    shareIntent = new Intent(Intent.ACTION_SEND);
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, webview.getUrl());
-                    shareIntent.setType("text/plain");
-                List<ResolveInfo> matches = getPackageManager().queryIntentActivities(shareIntent, 0);
-                for (ResolveInfo info : matches) {
-                    if (info.activityInfo.packageName.toLowerCase().contains("com.twitter")) {
-                        shareIntent.setPackage(info.activityInfo.packageName);
-                        flag = true;
-                    }
-                }
-                if (flag) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
+                shareIntent.setType("text/plain");
+                if (checkPackage(shareIntent, "com.twitter")) {
                     startActivity(shareIntent);
-                    webview.reload();
+                    webView.reload();
                 } else {
-                    webview.loadUrl("https://play.google.com/store/apps/details?id=com.twitter.android&hl=en");
+                    webView.loadUrl("https://play.google.com/store/apps/details?id=com.twitter.android&hl=en");
                 }
             }
 
-            if(url.equals("https://www.linkedin.com/company-beta/13269149/")){
-                Intent shareIntent;
-                shareIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/company-beta/13269149/"));
-                List<ResolveInfo> matches = getPackageManager().queryIntentActivities(shareIntent, 0);
-                for (ResolveInfo info : matches) {
-                    if (info.activityInfo.packageName.toLowerCase().contains("com.linkedin")) {
-                        shareIntent.setPackage(info.activityInfo.packageName);
-                        flag = true;
-                    }
-                }
-                if (flag) {
+            if (url.equals("https://www.linkedin.com/company-beta/13269149/")) {
+                Intent shareIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.linkedin.com/company-beta/13269149/"));
+                if (checkPackage(shareIntent, "com.linkedin")) {
                     startActivity(shareIntent);
-                    webview.reload();
+                    webView.reload();
                 } else {
-                    webview.loadUrl("https://play.google.com/store/apps/details?id=com.linkedin.android&hl=en");
+                    webView.loadUrl("https://play.google.com/store/apps/details?id=com.linkedin.android&hl=en");
                 }
             }
 
             if (url.startsWith("https://platform")) {
-                Intent shareIntent;
-                    shareIntent = new Intent(Intent.ACTION_SEND);
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, webview.getUrl());
-                    shareIntent.setType("text/plain");
-                List<ResolveInfo> matches = getPackageManager().queryIntentActivities(shareIntent, 0);
-                for (ResolveInfo info : matches) {
-                    if (info.activityInfo.packageName.toLowerCase().contains("com.linkedin")) {
-                        shareIntent.setPackage(info.activityInfo.packageName);
-                        flag = true;
-                    }
-                }
-                if (flag) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
+                shareIntent.setType("text/plain");
+                if (checkPackage(shareIntent, "com.linkedin")) {
                     startActivity(shareIntent);
-                    webview.reload();
+                    webView.reload();
                 } else {
-                    webview.loadUrl("https://play.google.com/store/apps/details?id=com.linkedin.android&hl=en");
+                    webView.loadUrl("https://play.google.com/store/apps/details?id=com.linkedin.android&hl=en");
                 }
             }
 
             if (url.startsWith("tg:")) {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.putExtra(Intent.EXTRA_TEXT, webview.getUrl());
+                shareIntent.putExtra(Intent.EXTRA_TEXT, webView.getUrl());
                 shareIntent.setType("text/plain");
-                List<ResolveInfo> matches = getPackageManager().queryIntentActivities(shareIntent, 0);
-                for (ResolveInfo info : matches) {
-                    if (info.activityInfo.packageName.toLowerCase().contains("telegram")) {
-                        shareIntent.setPackage(info.activityInfo.packageName);
-                        flag = true;
-                    }
-                }
-                if (flag) {
+                if (checkPackage(shareIntent, "telegram")) {
                     startActivity(shareIntent);
-                    webview.reload();
+                    webView.reload();
                 } else {
-                    webview.loadUrl("https://telegram.me/share/url?url=" + url);
-                    webview.stopLoading();
+                    webView.loadUrl("https://telegram.me/share/url?url=" + url);
+                    webView.stopLoading();
                 }
-            }
-
-            // only make it invisible the FIRST time the app is run
-            if (ShowOrHideWebViewInitialUse.equals("show")) {
-                webview.setVisibility(webview.INVISIBLE);
             }
         }
 
         @Override
-        public void onPageFinished(WebView view, String url) {
-
-            ShowOrHideWebViewInitialUse = "hide";
+        public void onPageFinished(WebView webView, String url) {
+            if (!isOnline()) {
+                finish();
+            }
             spinner.setVisibility(View.GONE);
-
-            view.setVisibility(webview.VISIBLE);
-            super.onPageFinished(view, url);
-
+            webView.setVisibility(View.VISIBLE);
+            fabInfo.setVisibility(View.VISIBLE);
+            super.onPageFinished(webView, url);
         }
     }
 }

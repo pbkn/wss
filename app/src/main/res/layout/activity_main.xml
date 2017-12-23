@@ -17,7 +17,7 @@
         android:visibility="gone" />
 
     <ProgressBar
-        android:id="@+id/progressBar1"
+        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -51,6 +51,7 @@
         android:layout_alignParentEnd="true"
         android:layout_gravity="bottom|end"
         android:clickable="true"
+        android:focusable="true"
         app:backgroundTint="@android:color/background_light"
         app:elevation="6dp"
         app:fabSize="mini"
@@ -61,12 +62,12 @@
         android:id="@+id/layoutFabAbout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_gravity="bottom|end"
         android:layout_above="@+id/fabInfo"
         android:layout_alignParentEnd="true"
-        android:orientation="horizontal"
-        android:layout_alignStart="@+id/fabInfo">
+        android:layout_alignStart="@+id/fabInfo"
+        android:layout_gravity="bottom|end"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabAbout"
@@ -74,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:clickable="true"
+            android:focusable="true"
             app:backgroundTint="@android:color/background_light"
             app:elevation="6dp"
             app:fabSize="mini"
@@ -85,12 +87,12 @@
         android:id="@+id/layoutFabShare"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_gravity="bottom|end"
         android:layout_above="@+id/layoutFabAbout"
         android:layout_alignParentEnd="true"
-        android:orientation="horizontal"
-        android:layout_alignStart="@+id/fabInfo">
+        android:layout_alignStart="@+id/fabInfo"
+        android:layout_gravity="bottom|end"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabShare"
@@ -98,6 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:clickable="true"
+            android:focusable="true"
             app:backgroundTint="@android:color/background_light"
             app:elevation="6dp"
             app:fabSize="mini"
@@ -109,12 +112,12 @@
         android:id="@+id/layoutFabLinkedin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_gravity="bottom|end"
         android:layout_above="@+id/layoutFabShare"
         android:layout_alignParentEnd="true"
-        android:orientation="horizontal"
-        android:layout_alignStart="@+id/fabInfo">
+        android:layout_alignStart="@+id/fabInfo"
+        android:layout_gravity="bottom|end"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabLinkedin"
@@ -122,6 +125,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:clickable="true"
+            android:focusable="true"
             app:backgroundTint="@android:color/background_light"
             app:elevation="6dp"
             app:fabSize="mini"
@@ -133,12 +137,12 @@
         android:id="@+id/layoutFabWhatsapp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_gravity="bottom|end"
         android:layout_above="@+id/layoutFabLinkedin"
         android:layout_alignParentEnd="true"
-        android:orientation="horizontal"
-        android:layout_alignStart="@+id/fabInfo">
+        android:layout_alignStart="@+id/fabInfo"
+        android:layout_gravity="bottom|end"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabWhatsapp"
@@ -146,6 +150,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:clickable="true"
+            android:focusable="true"
             app:backgroundTint="@android:color/background_light"
             app:elevation="6dp"
             app:fabSize="mini"
@@ -157,12 +162,12 @@
         android:id="@+id/layoutFabTwitter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_gravity="bottom|end"
         android:layout_above="@+id/layoutFabWhatsapp"
         android:layout_alignParentEnd="true"
-        android:orientation="horizontal"
-        android:layout_alignStart="@+id/fabInfo">
+        android:layout_alignStart="@+id/fabInfo"
+        android:layout_gravity="bottom|end"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabTwitter"
@@ -170,6 +175,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:clickable="true"
+            android:focusable="true"
             app:backgroundTint="@android:color/background_light"
             app:elevation="6dp"
             app:fabSize="mini"
@@ -181,12 +187,12 @@
         android:id="@+id/layoutFabFacebook"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:layout_gravity="bottom|end"
         android:layout_above="@+id/layoutFabTwitter"
         android:layout_alignParentEnd="true"
-        android:orientation="horizontal"
-        android:layout_alignStart="@+id/fabInfo">
+        android:layout_alignStart="@+id/fabInfo"
+        android:layout_gravity="bottom|end"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fabFacebook"
@@ -194,6 +200,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:clickable="true"
+            android:focusable="true"
             app:backgroundTint="@android:color/background_light"
             app:elevation="6dp"
             app:fabSize="mini"
