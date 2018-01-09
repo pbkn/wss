@@ -2,5 +2,5 @@
 <resources>
     <string name="app_name">WSS</string>
     <string name="no_connection">インターネット接続なし</string>
-    <string name="retry_text" translatable="false">リトライ</string>
+    <string name="retry_text">リトライ</string>
 </resources>

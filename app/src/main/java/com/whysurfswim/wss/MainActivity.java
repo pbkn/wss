@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar spinner;
     private FloatingActionButton fabInfo;
     private LinearLayoutCompat layoutAbout, layoutShare, layoutLinkedin, layoutTwitter, layoutWhatsapp, layoutFacebook;
+    private SwipeRefreshLayout layoutRefresh;
     private boolean fabExpanded = true;
     private long doubleBack = 0;
 
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         layoutTwitter = this.findViewById(R.id.layoutFabTwitter);
         layoutWhatsapp = this.findViewById(R.id.layoutFabWhatsapp);
         layoutFacebook = this.findViewById(R.id.layoutFabFacebook);
+        layoutRefresh = this.findViewById(R.id.swipeLayout);
 
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -66,12 +69,12 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         fabInfo.setVisibility(View.INVISIBLE);
         closeSubMenusFab();
-        webView.setWebViewClient(new CustomWebViewClient());
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setAppCacheEnabled(true);
         webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
+        webView.setWebViewClient(new CustomWebViewClient());
 
         if (isOnline()) {
             if (webView.getUrl() != null) {
@@ -85,6 +88,16 @@ public class MainActivity extends AppCompatActivity {
         } else {
             retryOnline();
         }
+
+        layoutRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (webView.getUrl() != null) {
+                    webView.reload();
+                }
+                layoutRefresh.setRefreshing(false);
+            }
+        });
 
         fabInfo.setOnClickListener(new View.OnClickListener() {
             @Override
