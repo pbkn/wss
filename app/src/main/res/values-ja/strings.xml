@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">WSS</string>
+    <string name="no_connection">インターネット接続なし</string>
+    <string name="retry_text" translatable="false">リトライ</string>
 </resources>
