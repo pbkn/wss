@@ -16,6 +16,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private long doubleBack = 0;
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -73,12 +74,16 @@ public class MainActivity extends AppCompatActivity {
         webView.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
 
         if (isOnline()) {
-            webView.loadUrl("https://whysurfswim.com/");
+            if (webView.getUrl() != null) {
+                webView.reload();
+            } else {
+                webView.loadUrl("https://whysurfswim.com/");
+            }
             MobileAds.initialize(this, "ca-app-pub-6059528612565667/8468844477");
             AdRequest adRequest = new AdRequest.Builder().build();
             adView.loadAd(adRequest);
         } else {
-            finish();
+            retryOnline();
         }
 
         fabInfo.setOnClickListener(new View.OnClickListener() {
@@ -158,6 +163,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * retryOnline method used to display retry page
+     */
+    private void retryOnline() {
+        setContentView(R.layout.activity_retry);
+        Button retryButton = this.findViewById(R.id.retryButton);
+
+        retryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isOnline()) {
+                    recreate();
+                }
+            }
+        });
+    }
+
 
     /**
      * closeSubMenusFab method used to close all the opened fabs
@@ -228,10 +250,9 @@ public class MainActivity extends AppCompatActivity {
     private class CustomWebViewClient extends WebViewClient {
 
         @Override
-        @SuppressLint("setJavaScriptEnabled")
         public void onPageStarted(WebView webView, String url, Bitmap favicon) {
             if (!isOnline()) {
-                finish();
+                retryOnline();
             } else {
                 spinner.setVisibility(View.VISIBLE);
             }
@@ -348,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPageFinished(WebView webView, String url) {
             if (!isOnline()) {
-                finish();
+                retryOnline();
             }
             spinner.setVisibility(View.GONE);
             webView.setVisibility(View.VISIBLE);

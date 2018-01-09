@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">WSS</string>
+    <string name="no_connection">No internet connection</string>
+    <string name="retry_text">RETRY</string>
 </resources>
