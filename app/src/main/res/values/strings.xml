@@ -2,4 +2,7 @@
     <string name="app_name">WSS</string>
     <string name="no_connection">No internet connection</string>
     <string name="retry_text">RETRY</string>
+    <string name="menu_name">menu</string>
+    <string name="menu_close">close</string>
+    <string name="search_text">Please enter your search term</string>
 </resources>

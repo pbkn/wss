@@ -9,22 +9,30 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressLint("setJavaScriptEnabled")
@@ -33,8 +41,14 @@ public class MainActivity extends AppCompatActivity {
     private WebView webView;
     private ProgressBar spinner;
     private FloatingActionButton fabInfo;
+    private ImageButton menuButton;
     private LinearLayoutCompat layoutAbout, layoutShare, layoutLinkedin, layoutTwitter, layoutWhatsapp, layoutFacebook;
+    private DrawerLayout layoutSidemenu;
     private SwipeRefreshLayout layoutRefresh;
+    private ListView listViewSidemenu;
+    private SearchView searchView;
+    private Toolbar toolbar;
+    private AdView adView;
     private boolean fabExpanded = true;
     private long doubleBack = 0;
 
@@ -43,14 +57,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = this.findViewById(R.id.toolbar);
-        AdView adView = this.findViewById(R.id.adView);
         FloatingActionButton fabAbout = this.findViewById(R.id.fabAbout);
         FloatingActionButton fabShare = this.findViewById(R.id.fabShare);
         FloatingActionButton fabLinkedin = this.findViewById(R.id.fabLinkedin);
         FloatingActionButton fabTwitter = this.findViewById(R.id.fabTwitter);
         FloatingActionButton fabWhatsapp = this.findViewById(R.id.fabWhatsapp);
         FloatingActionButton fabFacebook = this.findViewById(R.id.fabFacebook);
+        menuButton = this.findViewById(R.id.menuButton);
+        searchView = this.findViewById(R.id.searchView);
+        toolbar = this.findViewById(R.id.toolbar);
+        adView = this.findViewById(R.id.adView);
         spinner = this.findViewById(R.id.progressBar);
         webView = this.findViewById(R.id.webView);
         fabInfo = this.findViewById(R.id.fabInfo);
@@ -61,33 +77,10 @@ public class MainActivity extends AppCompatActivity {
         layoutWhatsapp = this.findViewById(R.id.layoutFabWhatsapp);
         layoutFacebook = this.findViewById(R.id.layoutFabFacebook);
         layoutRefresh = this.findViewById(R.id.swipeLayout);
+        layoutSidemenu = this.findViewById(R.id.sidemenuLayout);
+        listViewSidemenu = this.findViewById(R.id.sidemenuListView);
 
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        fabInfo.setVisibility(View.INVISIBLE);
-        closeSubMenusFab();
-        webView.getSettings().setDomStorageEnabled(true);
-        webView.getSettings().setAppCacheEnabled(true);
-        webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
-        webView.setWebViewClient(new CustomWebViewClient());
-
-        if (isOnline()) {
-            if (webView.getUrl() != null) {
-                webView.reload();
-            } else {
-                webView.loadUrl("https://whysurfswim.com/");
-            }
-            MobileAds.initialize(this, "ca-app-pub-6059528612565667/8468844477");
-            AdRequest adRequest = new AdRequest.Builder().build();
-            adView.loadAd(adRequest);
-        } else {
-            retryOnline();
-        }
+        initialLoad();
 
         layoutRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -96,6 +89,64 @@ public class MainActivity extends AppCompatActivity {
                     webView.reload();
                 }
                 layoutRefresh.setRefreshing(false);
+            }
+        });
+
+        listViewSidemenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        closeSidemenu();
+                        webView.loadUrl("https://whysurfswim.com/");
+                        break;
+                    case 1:
+                        closeSidemenu();
+                        webView.loadUrl("https://whysurfswim.com/category/android-development/");
+                        break;
+                    case 2:
+                        closeSidemenu();
+                        webView.loadUrl("https://whysurfswim.com/services/");
+                        break;
+                    case 3:
+                        closeSidemenu();
+                        webView.loadUrl("https://whysurfswim.com/contact-us/");
+                        break;
+                    case 4:
+                        closeSidemenu();
+                        webView.loadUrl("https://whysurfswim.com/category/downloads/");
+                        break;
+                    case 5:
+                        closeSidemenu();
+                        webView.loadUrl("https://whysurfswim.com/about-us/");
+                        break;
+                    default:
+                        closeSidemenu();
+                        break;
+                }
+            }
+        });
+
+
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                layoutSidemenu.setVisibility(View.VISIBLE);
+                layoutSidemenu.openDrawer(Gravity.START, true);
+                closeWebView();
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String searchText) {
+                webView.loadUrl("https://whysurfswim.com/?s=" + searchText);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
             }
         });
 
@@ -177,6 +228,62 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * initialLoad method is used to set default conditions
+     */
+    private void initialLoad() {
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        fabInfo.setVisibility(View.INVISIBLE);
+        layoutSidemenu.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+        searchView.setActivated(true);
+        searchView.setQueryHint("Please enter your search term");
+        searchView.onActionViewExpanded();
+        searchView.setIconified(false);
+        searchView.clearFocus();
+        closeSubMenusFab();
+        addSidemenuItems();
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setAppCacheEnabled(true);
+        webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
+        webView.setWebViewClient(new CustomWebViewClient());
+        adLoad();
+    }
+
+    /**
+     * adLoad method is used to load the advertisements
+     */
+    private void adLoad() {
+        if (isOnline()) {
+            if (webView.getUrl() != null) {
+                webView.reload();
+            } else {
+                webView.loadUrl("https://whysurfswim.com/");
+            }
+            MobileAds.initialize(this, "ca-app-pub-6059528612565667/8468844477");
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
+        } else {
+            retryOnline();
+        }
+    }
+
+    /**
+     * addSidemenuItems is used to add items in side menu
+     */
+    private void addSidemenuItems() {
+        List<String> sidemenuList = Arrays.asList("Home", "Android Development", "Service", "Contact", "Downloads",
+                "About", "Close Menu");
+        ArrayAdapter<String> arrayAdapterSidemenu = new ArrayAdapter<>(this,
+                android.R.layout.simple_expandable_list_item_1, sidemenuList);
+        listViewSidemenu.setAdapter(arrayAdapterSidemenu);
+    }
+
+    /**
      * retryOnline method used to display retry page
      */
     private void retryOnline() {
@@ -220,6 +327,36 @@ public class MainActivity extends AppCompatActivity {
         layoutFacebook.setVisibility(View.VISIBLE);
         fabInfo.setImageResource(R.drawable.ic_close_black_24dp);
         fabExpanded = true;
+    }
+
+    /**
+     * closeWebView method used to hide icons while loading
+     */
+    private void closeWebView() {
+        webView.setVisibility(View.INVISIBLE);
+        closeSubMenusFab();
+        fabInfo.setVisibility(View.INVISIBLE);
+        menuButton.setVisibility(View.INVISIBLE);
+        searchView.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * openWebView method used to show icons after loading
+     */
+    private void openWebView() {
+        webView.setVisibility(View.VISIBLE);
+        fabInfo.setVisibility(View.VISIBLE);
+        menuButton.setVisibility(View.VISIBLE);
+        searchView.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * closeSidemenu method used to close sidemenu
+     */
+    private void closeSidemenu() {
+        layoutSidemenu.closeDrawer(Gravity.START, true);
+        layoutSidemenu.setVisibility(View.INVISIBLE);
+        openWebView();
     }
 
     /**
@@ -271,7 +408,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if (spinner.getVisibility() == View.VISIBLE) {
-                webView.setVisibility(View.INVISIBLE);
+                closeWebView();
             }
 
             if (url.startsWith("https://play.google.com")) {
@@ -385,8 +522,7 @@ public class MainActivity extends AppCompatActivity {
                 retryOnline();
             }
             spinner.setVisibility(View.GONE);
-            webView.setVisibility(View.VISIBLE);
-            fabInfo.setVisibility(View.VISIBLE);
+            openWebView();
             super.onPageFinished(webView, url);
         }
     }
