@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "510296018259",
+    "firebase_url": "https://wss-whysurfswim.firebaseio.com",
+    "project_id": "wss-whysurfswim",
+    "storage_bucket": "wss-whysurfswim.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510296018259:android:d795e2bb9f22ba0d",
+        "android_client_info": {
+          "package_name": "com.whysurfswim.wss"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "510296018259-548m4m9fp5ctbu1os8omei66parijl2d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnH9NovFfuElzbUN4UViRkpqVZ7WS7fIE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
