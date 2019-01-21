@@ -28,9 +28,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 
 import java.util.List;
 
@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     private SearchView searchView;
     private Toolbar toolbar;
     private TextView textView;
-    private AdView mAdView;
     private DrawerLayout sidemenuLayout;
     private NavigationView sidemenuView;
     private long doubleBack = 0;
@@ -57,19 +56,16 @@ public class MainActivity extends AppCompatActivity {
         searchView = this.findViewById(R.id.searchView);
         toolbar = this.findViewById(R.id.toolbar);
         webView = this.findViewById(R.id.webView);
-        textView = this.findViewById(R.id.timeTextView);
+        textView = this.findViewById(R.id.textView);
         layoutRefresh = this.findViewById(R.id.swipeLayout);
         sidemenuLayout = this.findViewById(R.id.sidemenuDrawerLayout);
         sidemenuView = this.findViewById(R.id.sidemenuNavigationView);
         initialLoad();
         eventListeners();
         MobileAds.initialize(this, "ca-app-pub-6059528612565667~1367770570");
-        AdView adView = new AdView(this);
-        adView.setAdSize(AdSize.SMART_BANNER);
-        adView.setAdUnitId("ca-app-pub-6059528612565667/8468844477");
-        mAdView = findViewById(R.id.adView);
+        AdView adView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        adView.loadAd(adRequest);
     }
 
     /**
@@ -144,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onDrawerOpened(@NonNull View drawerView) {
+                        textView.setVisibility(View.INVISIBLE);
                         unCheckSidemenu();
                         if (getSupportActionBar() != null) {
                             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_keyboard_arrow_left_black_24dp);
@@ -152,10 +149,10 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onDrawerClosed(@NonNull View drawerView) {
+                        textView.setVisibility(View.VISIBLE);
                         unCheckSidemenu();
                         if (getSupportActionBar() != null) {
                             getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
-                            textView.setVisibility(View.VISIBLE);
                         }
                     }
 
@@ -346,7 +343,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onPageFinished(WebView webView, String url) {
+            if (!isOnline()) {
+                retryOnline();
+            }
             super.onPageFinished(webView, url);
+        }
+
+        @Override
+        public void onPageCommitVisible(WebView webView, String url) {
+            if (!isOnline()) {
+                retryOnline();
+            }
+            super.onPageCommitVisible(webView, url);
         }
     }
 }
