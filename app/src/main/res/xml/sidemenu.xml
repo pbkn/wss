@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/home"
+            android:checked="false"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="HOME" />
+        <item
+            android:id="@+id/androidTutorials"
+            android:checked="false"
+            android:icon="@drawable/ic_adb_black_24dp"
+            android:title="ANDROID TUTORIALS" />
+        <item
+            android:id="@+id/contactUs"
+            android:checked="false"
+            android:icon="@drawable/ic_fiber_smart_record_black_24dp"
+            android:title="CONTACT US" />
+        <item
+            android:id="@+id/otherApps"
+            android:checked="false"
+            android:icon="@drawable/ic_apps_black_24dp"
+            android:title="OTHER APPS" />
+        <item
+            android:id="@+id/aboutUs"
+            android:checked="false"
+            android:icon="@drawable/ic_subject_black_24dp"
+            android:title="ABOUT US" />
+        <item
+            android:id="@+id/review"
+            android:checked="false"
+            android:icon="@drawable/ic_grade_black_24dp"
+            android:title="REVIEW" />
+    </group>
+</menu>

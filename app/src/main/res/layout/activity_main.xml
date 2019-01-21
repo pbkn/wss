@@ -6,256 +6,107 @@
     android:layout_height="match_parent"
     tools:context="com.whysurfswim.wss.MainActivity">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeLayout"
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/sidemenuDrawerLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start">
 
-        <WebView
-            android:id="@+id/webView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
+        <FrameLayout
+            android:id="@+id/content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.design.widget.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:theme="@style/AppTheme"
+                app:expanded="true">
+
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?android:attr/actionBarSize"
+                    android:background="@color/browser_actions_bg_grey"
+                    android:theme="@style/AppTheme">
+
+                    <SearchView
+                        android:id="@+id/searchView"
+                        android:layout_width="match_parent"
+                        android:layout_height="?android:attr/actionBarSize"
+                        android:background="@android:color/background_light"
+                        android:gravity="end"
+                        android:orientation="horizontal" />
+                </android.support.v7.widget.Toolbar>
+
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/swipeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <WebView
+                        android:id="@+id/webView"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true" />
+                </android.support.v4.widget.SwipeRefreshLayout>
+
+            </android.support.design.widget.AppBarLayout>
+        </FrameLayout>
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/sidemenuNavigationView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:visibility="gone">
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:menu="@xml/sidemenu" />
+    </android.support.v4.widget.DrawerLayout>
 
-        </WebView>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabShare"
+        android:layout_width="?android:attr/actionBarSize"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_above="@id/adView"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="bottom|end"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="@android:color/background_light"
+        app:elevation="6dp"
+        app:fabSize="normal"
+        app:pressedTranslationZ="12dp"
+        app:srcCompat="@drawable/ic_share_black_24dp" />
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
+        android:layout_centerHorizontal="true"
         android:background="@android:color/background_light"
         android:focusable="true"
         android:theme="@style/AppTheme"
         android:visibility="visible"
-        app:adSize="SMART_BANNER"
+        app:adSize="BANNER"
         app:adUnitId="ca-app-pub-6059528612565667/8468844477" />
 
-    <SearchView
-        android:id="@+id/searchView"
+    <TextView
+        android:id="@+id/timeTextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@android:dimen/app_icon_size"
-        android:background="@android:color/background_light"
-        android:gravity="end"
-        android:orientation="horizontal" />
-
-    <ImageButton
-        android:id="@+id/menuButton"
-        android:layout_width="@android:dimen/app_icon_size"
-        android:layout_height="@android:dimen/app_icon_size"
-        android:layout_gravity="start"
-        android:background="@android:color/background_light"
-        android:contentDescription="@string/menu_name"
-        app:srcCompat="@drawable/ic_menu_black_24dp" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/toolbar"
-        android:layout_alignParentEnd="true"
-        android:layout_gravity="bottom|end"
-        android:clickable="true"
-        android:focusable="true"
-        app:backgroundTint="@android:color/holo_green_light"
-        app:elevation="6dp"
-        app:fabSize="normal"
-        app:pressedTranslationZ="12dp"
-        app:srcCompat="@drawable/ic_info_outline_black_24dp" />
-
-    <android.support.v7.widget.LinearLayoutCompat
-        android:id="@+id/layoutFabAbout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/fabInfo"
-        android:layout_alignParentEnd="true"
-        android:layout_alignStart="@+id/fabInfo"
-        android:layout_gravity="bottom|end"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabAbout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:clickable="true"
-            android:focusable="true"
-            app:backgroundTint="@android:color/holo_orange_light"
-            app:elevation="6dp"
-            app:fabSize="normal"
-            app:pressedTranslationZ="12dp"
-            app:srcCompat="@drawable/ic_public_black_24dp" />
-    </android.support.v7.widget.LinearLayoutCompat>
-
-    <android.support.v7.widget.LinearLayoutCompat
-        android:id="@+id/layoutFabLinkedin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/layoutFabShare"
-        android:layout_alignParentEnd="true"
-        android:layout_alignStart="@+id/fabInfo"
-        android:layout_gravity="bottom|end"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabLinkedin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:clickable="true"
-            android:focusable="true"
-            app:backgroundTint="@android:color/background_light"
-            app:elevation="6dp"
-            app:fabSize="normal"
-            app:pressedTranslationZ="12dp"
-            app:srcCompat="@drawable/ic_linkedin" />
-    </android.support.v7.widget.LinearLayoutCompat>
-
-    <android.support.v7.widget.LinearLayoutCompat
-        android:id="@+id/layoutFabFacebook"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/layoutFabTwitter"
-        android:layout_alignParentEnd="true"
-        android:layout_alignStart="@+id/fabInfo"
-        android:layout_gravity="bottom|end"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabFacebook"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:clickable="true"
-            android:focusable="true"
-            app:backgroundTint="@android:color/background_light"
-            app:elevation="6dp"
-            app:fabSize="normal"
-            app:pressedTranslationZ="12dp"
-            app:srcCompat="@drawable/ic_facebook" />
-    </android.support.v7.widget.LinearLayoutCompat>
-
-    <android.support.v7.widget.LinearLayoutCompat
-        android:id="@+id/layoutFabTwitter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/layoutFabWhatsapp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignStart="@+id/fabInfo"
-        android:layout_gravity="bottom|end"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabTwitter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:clickable="true"
-            android:focusable="true"
-            app:backgroundTint="@android:color/background_light"
-            app:elevation="6dp"
-            app:fabSize="normal"
-            app:pressedTranslationZ="12dp"
-            app:srcCompat="@drawable/ic_twitter" />
-    </android.support.v7.widget.LinearLayoutCompat>
-
-    <android.support.v7.widget.LinearLayoutCompat
-        android:id="@+id/layoutFabShare"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/layoutFabAbout"
-        android:layout_alignParentEnd="true"
-        android:layout_alignStart="@+id/fabInfo"
-        android:layout_gravity="bottom|end"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabShare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:clickable="true"
-            android:focusable="true"
-            app:backgroundTint="@android:color/holo_blue_bright"
-            app:elevation="6dp"
-            app:fabSize="normal"
-            app:pressedTranslationZ="12dp"
-            app:srcCompat="@drawable/ic_share_black_24dp" />
-    </android.support.v7.widget.LinearLayoutCompat>
-
-    <android.support.v7.widget.LinearLayoutCompat
-        android:id="@+id/layoutFabWhatsapp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/layoutFabLinkedin"
-        android:layout_alignParentEnd="true"
-        android:layout_alignStart="@+id/fabInfo"
-        android:layout_gravity="bottom|end"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fabWhatsapp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:clickable="true"
-            android:focusable="true"
-            app:backgroundTint="@android:color/background_light"
-            app:elevation="6dp"
-            app:fabSize="normal"
-            app:pressedTranslationZ="12dp"
-            app:srcCompat="@drawable/ic_whatsapp" />
-    </android.support.v7.widget.LinearLayoutCompat>
-
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/sidemenuLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:visibility="invisible">
-
-        <ListView
-            android:id="@+id/sidemenuListView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="@android:color/background_light" />
-
-    </android.support.v4.widget.DrawerLayout>
-
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerInParent="true"
-        android:layout_centerVertical="true"
-        android:background="@android:color/transparent" />
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toEndOf="@+id/swipeLayout"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:background="@color/browser_actions_bg_grey"
+        android:fontFamily="serif"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_dark"
+        android:textSize="24sp"
+        android:textStyle="bold|italic" />
 
 </RelativeLayout>

@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">WSS</string>
-    <string name="no_connection">No internet connection</string>
-    <string name="retry_text">RETRY</string>
-    <string name="menu_name">menu</string>
-    <string name="menu_close">close</string>
-    <string name="search_text">Please enter your search term</string>
+    <string name="no_connection">No Internet Connection</string>
+    <string name="retry_text">Retry</string>
+    <string name="search_text">Enter Search Term</string>
+    <string name="home_text">HOME</string>
+    <string name="android_text">ANDROID TUTORIALS</string>
+    <string name="contact_text">CONTACT US</string>
+    <string name="about_text">ABOUT US</string>
+    <string name="post_text">BLOG POST</string>
+    <string name="search_result_text">SEARCH RESULTS</string>
 </resources>
