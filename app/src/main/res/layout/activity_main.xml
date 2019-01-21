@@ -79,7 +79,6 @@
         android:clickable="true"
         android:focusable="true"
         app:backgroundTint="@android:color/background_light"
-        app:elevation="6dp"
         app:fabSize="normal"
         app:pressedTranslationZ="12dp"
         app:srcCompat="@drawable/ic_share_black_24dp" />
@@ -91,18 +90,20 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@android:color/background_light"
-        android:focusable="true"
+        android:clickable="false"
+        android:focusableInTouchMode="false"
         android:theme="@style/AppTheme"
         android:visibility="visible"
-        app:adSize="BANNER"
+        app:adSize="SMART_BANNER"
         app:adUnitId="ca-app-pub-6059528612565667/8468844477" />
 
     <TextView
-        android:id="@+id/timeTextView"
+        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_marginTop="?attr/actionBarSize"
         android:background="@color/browser_actions_bg_grey"
+        android:focusable="true"
         android:fontFamily="serif"
         android:textAlignment="center"
         android:textColor="@android:color/background_dark"
