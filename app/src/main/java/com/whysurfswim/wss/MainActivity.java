@@ -30,7 +30,6 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 
 import java.util.List;
 
@@ -112,7 +111,13 @@ public class MainActivity extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
         webView.setWebViewClient(new CustomWebViewClient());
-        webView.loadUrl("https://whysurfswim.com/");
+        Intent intent = getIntent();
+        Uri data = intent.getData();
+        if (data != null) {
+            webView.loadUrl("https://whysurfswim.com/" + data.getEncodedPath());
+        } else {
+            webView.loadUrl("https://whysurfswim.com/");
+        }
     }
 
     /**
